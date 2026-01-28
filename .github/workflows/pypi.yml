@@ -72,11 +72,6 @@ jobs:
           pattern: dist-*
           merge-multiple: true
 
-      - name: Flatten dist
-        run: |
-          find dist -type f \( -name "*.tar.gz" -o -name "*.whl" \) -exec mv -t dist/ {} +
-          rm -rf dist/dist-*
-
       - name: Check final artifacts
         run: ls -lh dist
 
