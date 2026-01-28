@@ -54,7 +54,7 @@ jobs:
         env:
           CIBW_ARCHS: ${{matrix.cibw_arch}}
           CIBW_SKIP: "*-musllinux_aarch64"
-          CIBW_TEST_SKIP: "*-win_*,cp314-*"
+          CIBW_TEST_SKIP: "*-win_* cp31?t-*"
       - name: Upload wheels
         uses: actions/upload-artifact@v6
         with:
