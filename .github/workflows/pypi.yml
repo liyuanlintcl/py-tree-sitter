@@ -49,7 +49,7 @@ jobs:
         uses: pypa/cibuildwheel@v3.3
         env:
           CIBW_ARCHS: ${{matrix.cibw_arch}}
-          CIBW_SKIP: "*-musllinux_aarch64"
+          CIBW_BUILD: "cp314t-*"
           CIBW_TEST_SKIP: "*-win_* cp31?t-*"
       - name: Upload wheels
         uses: actions/upload-artifact@v6
@@ -68,7 +68,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          fetch-depth: 0          # 需要完整历史，保证 tag 能被找到
 
       - name: Download artifacts
         uses: actions/download-artifact@v7
@@ -81,6 +81,9 @@ jobs:
         run: ls -lh dist
 
       - name: Create GitHub release
-        run: gh release create "$GITHUB_REF_NAME" dist/* --generate-notes
+        run: |
+          # 手动触发时取输入的 tag；push 触发时取 GITHUB_REF_NAME
+          TAG="${{ github.event.inputs.tag || github.ref_name }}"
+          gh release create "$TAG" dist/* --generate-notes
         env:
           GH_TOKEN: ${{ github.token }}
